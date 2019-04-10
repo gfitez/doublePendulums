@@ -1,6 +1,7 @@
 float pixelsPerMeter=50;
-float timeInterval=0.01;
+float timeInterval=0.001;
 float g=9.8;
+float f=0;
 
 class Spring{
   PVector start,end;
@@ -58,7 +59,7 @@ class Mass{
   public void update(PVector force){
     PVector acc=PVector.div(force,mass);
     vel.add(PVector.mult(acc,timeInterval));
-    pos.add(PVector.mult(vel,timeInterval));
+    pos.add(PVector.add(PVector.mult(vel,timeInterval),PVector.mult(PVector.mult(acc,0.5),pow(timeInterval,2))));
   }
   public PVector getPos(){
     return pos;
@@ -77,20 +78,22 @@ class Mass{
 class System{
   Mass m1,m2;
   Spring s1,s2;
+  int iterations=0;
   public System(){
     s1=new Spring(new PVector(10,6),new PVector(10,8),2,40);
     m1=new Mass(s1.end,1);
-    s2=new Spring(m1.pos,new PVector(11,10),2,80);
+    s2=new Spring(m1.pos,new PVector(10,10),2,40);
     m2=new Mass(s2.end,2);
   }
   public void run(){
+    iterations++;
     PVector f1=s1.force();
-    f1.add(new PVector(0,9.8*m1.mass));
+    f1.add(new PVector(0,g*m1.mass));
     f1.add(s2.force().mult(-1));
     m1.update(f1);
     
     PVector f2=s2.force();
-    f2.add(new PVector(0,9.8*m2.mass));
+    f2.add(new PVector(0,g*m2.mass));
     m2.update(f2);
     
     
@@ -109,20 +112,19 @@ class System{
 }
 
 System s=new System();
+PrintWriter output;
 void setup(){
-  frameRate(60);
+  frameRate(600);
   size(1000,1000);
+  output = createWriter("chaos.txt"); 
   
 }
 void draw(){
   background(255);
-  //s.s1.setStart(new PVector(10,5+sin(2*PI*millis()/1000.0/2)));
-  
-
+  s.s1.setStart(new PVector(10,5+sin(s.iterations*timeInterval*f)));
   s.run();
-  
   s.draw();
-println(s.E());
+  println(s.iterations*timeInterval);
   
   
 }
