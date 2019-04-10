@@ -13,7 +13,8 @@ class Spring{
     this.k=k;
   }
   public float length(){
-    return start.dist(end);
+    float dist =start.dist(end);
+    return dist;
   }
   public void setPos(PVector start, PVector end){
     this.start=start;
@@ -36,7 +37,7 @@ class Spring{
     line(start.x*pixelsPerMeter,start.y*pixelsPerMeter,end.x*pixelsPerMeter,end.y*pixelsPerMeter);
   }
   public float E(){
-    return 0.5*k*pow(length(),2);
+    return 0.5*k*pow(length()-naturalLength,2);
   }
   
 }
@@ -79,7 +80,7 @@ class System{
   public System(){
     s1=new Spring(new PVector(10,6),new PVector(10,8),2,40);
     m1=new Mass(s1.end,1);
-    s2=new Spring(m1.pos,new PVector(10,10),2,80);
+    s2=new Spring(m1.pos,new PVector(11,10),2,80);
     m2=new Mass(s2.end,2);
   }
   public void run(){
@@ -115,11 +116,13 @@ void setup(){
 }
 void draw(){
   background(255);
-  s.s1.setStart(new PVector(10,5+sin(2*PI*millis()/1000.0/5)));
+  //s.s1.setStart(new PVector(10,5+sin(2*PI*millis()/1000.0/2)));
+  
+
   s.run();
   
   s.draw();
-println(s.s1.force());
+println(s.E());
   
   
 }
