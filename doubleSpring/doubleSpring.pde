@@ -1,7 +1,10 @@
+
+
 float pixelsPerMeter=50;
-float timeInterval=0.001;
-float g=9.8;
-float f=0;
+float timeInterval=0.01;
+float g=0;
+float f=10;
+
 
 class Spring{
   PVector start,end;
@@ -43,13 +46,13 @@ class Spring{
   
 }
 class Mass{
-  PVector pos;
-  PVector vel;
+  PVector pos,vel,acc;
   float mass;
   public Mass(PVector pos,float mass){
     this.pos=pos;
     this.mass=mass;
     this.vel=new PVector(0,0);
+    this.acc=new PVector(0,0);
   }
   public void draw(){
     stroke(0);
@@ -57,9 +60,16 @@ class Mass{
     circle(pos.x*pixelsPerMeter,pos.y*pixelsPerMeter,sqrt(mass)*20);
   }
   public void update(PVector force){
-    PVector acc=PVector.div(force,mass);
-    vel.add(PVector.mult(acc,timeInterval));
+    
     pos.add(PVector.add(PVector.mult(vel,timeInterval),PVector.mult(PVector.mult(acc,0.5),pow(timeInterval,2))));
+    
+    PVector oldAcc=acc;
+    acc=PVector.div(force,mass);
+    vel.add(PVector.mult(PVector.mult(PVector.add(acc,oldAcc),0.5),timeInterval));//(oldAcc+acc)*0.5*timeInterval
+    
+    
+    
+    
   }
   public PVector getPos(){
     return pos;
@@ -82,23 +92,26 @@ class System{
   public System(){
     s1=new Spring(new PVector(10,6),new PVector(10,8),2,40);
     m1=new Mass(s1.end,1);
-    s2=new Spring(m1.pos,new PVector(10,10),2,40);
-    m2=new Mass(s2.end,2);
+    s2=new Spring(m1.pos,new PVector(10,15),2,40);
+    m2=new Mass(s2.end,5);
   }
   public void run(){
     iterations++;
     PVector f1=s1.force();
     f1.add(new PVector(0,g*m1.mass));
     f1.add(s2.force().mult(-1));
-    m1.update(f1);
     
     PVector f2=s2.force();
     f2.add(new PVector(0,g*m2.mass));
-    m2.update(f2);
-    
     
     s1.setEnd(m1.pos);
     s2.setPos(m1.pos,m2.pos);
+    
+    m1.update(f1);
+    m2.update(f2);
+    
+    
+    
   }
   public void draw(){
     s1.draw();
@@ -113,18 +126,33 @@ class System{
 
 System s=new System();
 PrintWriter output;
+Mass m=new Mass(new PVector(5,10),1);
+Spring sp=new Spring(new PVector(5,0),new PVector(5,10),1,10);
+
+
 void setup(){
   frameRate(600);
   size(1000,1000);
   output = createWriter("chaos.txt"); 
+  m.vel=new PVector(0,-5);
   
 }
 void draw(){
   background(255);
-  s.s1.setStart(new PVector(10,5+sin(s.iterations*timeInterval*f)));
+  //s.s1.setStart(new PVector(10,5+sin(s.iterations*timeInterval*f)));
   s.run();
   s.draw();
-  println(s.iterations*timeInterval);
+  /**
+  float lastEnergy=(m.E()+sp.E());
+  
+  sp.end=m.pos;
+  PVector f=new PVector(0,m.mass*g);
+  f.add(sp.force());
+  m.update(f);
+  m.draw();
+  sp.draw();**/
+  
+  println(s.E());
   
   
 }
