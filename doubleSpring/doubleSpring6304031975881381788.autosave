@@ -43,7 +43,7 @@ class Spring{
   public float E(){
     return 0.5*k*pow(length()-naturalLength,2);
   }
-  
+          
 }
 class Mass{
   PVector pos,vel,acc;
@@ -85,11 +85,11 @@ class Mass{
   }
 }
 
-class Sys{
+class System{
   Mass m1,m2;
   Spring s1,s2;
   int iterations=0;
-  public Sys(){
+  public System(){
     s1=new Spring(new PVector(10,6),new PVector(10,8),2,40);
     m1=new Mass(s1.end,1);
     s2=new Spring(m1.pos,new PVector(10,15),2,40);
@@ -124,7 +124,7 @@ class Sys{
   }
 }
 
-Sys s=new Sys();
+System s=new System();
 PrintWriter output;
 Mass m=new Mass(new PVector(5,10),1);
 Spring sp=new Spring(new PVector(5,0),new PVector(5,10),1,10);
