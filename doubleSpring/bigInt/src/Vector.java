@@ -1,4 +1,4 @@
-import org.jetbrains.annotations.Contract;
+
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -12,7 +12,11 @@ public class Vector {
         this.mc=mc;
     }
     public BigDecimal dist(Vector other){
-        return other.x.subtract(this.x,mc).pow(2,mc).add(other.y.subtract(this.y,mc).pow(2,mc),mc).sqrt(mc);
+
+        //TODO TWO DIMENSIONS
+        //System.out.println(other.y +" "+this.y);
+        return other.y.subtract(this.y,mc).abs();
+        //return other.x.subtract(this.x,mc).pow(2,mc).add(other.y.subtract(this.y,mc).pow(2,mc),mc).sqrt(mc);
     }
     public void add(Vector other){
         this.x=this.x.add(other.x);
@@ -33,7 +37,9 @@ public class Vector {
         return new Vector(v1.x.divide(a,mc),v1.y.divide(a,mc),mc);
     }
     public BigDecimal mag(){
-        return this.x.pow(2,mc).add(this.y.pow(2,mc)).sqrt(mc);
+        //TODO TWO DIMENSIONS
+        return this.y.abs();
+        //return this.x.pow(2,mc).add(this.y.pow(2,mc)).sqrt(mc);
     }
 
 }

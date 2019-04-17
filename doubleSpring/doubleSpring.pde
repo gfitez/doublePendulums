@@ -134,7 +134,7 @@ void setup(){
   frameRate(600);
   size(1000,1000);
   output = createWriter("chaos.txt"); 
-  m.vel=new PVector(0,-5);
+  m.vel=new PVector(0,0);
   
 }
 void draw(){

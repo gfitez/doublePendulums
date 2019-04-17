@@ -15,8 +15,8 @@ with open('log.txt','r') as csvfile:
         e.append(float(row[3]))
 
 #plt.plot(t,m2)
-#plt.plot(t,m1)
-plt.plot(t,e)
+plt.plot(t,m1)
+#plt.plot(t,e)
 plt.xlabel('time')
 plt.ylabel('time')
 plt.title('')

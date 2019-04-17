@@ -27,7 +27,7 @@ public class Sys {
 
         elapsedTime=new BigDecimal(0,mc);
 
-        timeInterval=new BigDecimal(0.00001,mc);
+        timeInterval=new BigDecimal("0.001",mc);
 
         try{
             logger=new PrintWriter("log.txt","utf-8");
@@ -49,7 +49,7 @@ public class Sys {
         f1.add(Vector.mult(s2.force(),(new BigDecimal(-1,mc)),mc));
 
         Vector f2=s2.force();
-        f1.add(new Vector(new BigDecimal(0,mc),m2.mass.multiply(g,mc),mc));
+        f2.add(new Vector(new BigDecimal(0,mc),m2.mass.multiply(g,mc),mc));
 
         m1.update(f1,timeInterval);
         m2.update(f2,timeInterval);
@@ -64,6 +64,7 @@ public class Sys {
         }
     }
     public void logData(){
+
         logger.println(elapsedTime+", "+m1.pos.y+", "+m2.pos.y+ ", "+E());
     }
     public void close(){
