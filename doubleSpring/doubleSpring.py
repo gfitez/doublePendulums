@@ -2,7 +2,7 @@ import math, time
 import matplotlib.pyplot as plt
 import numpy as np
 
-g=-9.8
+g=0
 
 class Vector:
     def __init__(self,x,y):
@@ -66,7 +66,7 @@ class Mass:
     def E(self):
         return self.KE()+self.PE()
 
-class Sys:
+"""class Sys:
     def __init__(self):
         self.m1=Mass(Vector(0,-1),1)
         self.m2=Mass(Vector(0,-2),1)
@@ -110,9 +110,43 @@ class Sys:
     def runSim(self,time):
         for i in range(math.floor(time/self.timeInterval)):
             self.run()
+            self.logData()"""
+class Sys:
+    def __init__(self):
+        self.m1=Mass(Vector(0,- 1.1),2)
+        self.s1=Spring(Vector(0,0),self.m1.pos,1,100)
+
+        self.timeInterval=0.001;
+        self.timeElapsed=0;
+
+        self.times=[]
+        self.energies=[];
+        self.m1y=[]
+    def run(self):
+
+        self.s1.end=self.m1.pos;
+
+        f1=self.s1.force();
+        f1.add(Vector(0,g*self.m1.mass))
+
+
+        self.m1.update(f1,self.timeInterval)
+
+        self.timeElapsed+=self.timeInterval;
+
+    def logData(self):
+        self.energies.append(self.m1.E()+self.s1.E())
+        self.m1y.append(self.m1.pos.y)
+        self.times.append(self.timeElapsed)
+    def runSim(self,time):
+        for i in range(math.floor(time/self.timeInterval)):
+            self.run()
             self.logData()
 
+    def E(self):
+        return self.s1.E()+self.m1.E();
 
+"""
 freq=0;
 pos=[]
 freqs=[]
@@ -130,8 +164,16 @@ for i in range(math.floor(maxFreq/increment)):
     elapsed=time.time()-startTime
     complete=freq/maxFreq
     print(str(complete*100)+"% ("+str(elapsed/complete-elapsed) + " seconds remaining)")
+"""
 
-plt.plot(freqs,pos)
+s=Sys();
+for i in range(10):
+    s.run();
+    s.logData();
+    print("vel:"+str(s.m1.vel.y)+" kinetic:"+str(s.m1.KE())+" Potential:"+str(s.m1.PE()+s.s1.E())+" Total E:"+str(s.E()))
+
+plt.plot(s.times,s.energies);
+plt.plot(s.times,s.m1y)
 #plt.plot(s.times,s.m1y)
 #print(s.energies[len(s.energies)-1]/s.energies[0])
 plt.show()

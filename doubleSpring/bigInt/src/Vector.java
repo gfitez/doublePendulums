@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.Contract;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 
@@ -26,6 +28,7 @@ public class Vector {
     public static Vector mult(Vector v1, BigDecimal a, MathContext mc){
         return new Vector(v1.x.multiply(a,mc),v1.y.multiply(a,mc),mc);
     }
+
     public static Vector div(Vector v1, BigDecimal a, MathContext mc){
         return new Vector(v1.x.divide(a,mc),v1.y.divide(a,mc),mc);
     }
